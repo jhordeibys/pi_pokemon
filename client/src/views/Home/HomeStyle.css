@@ -1,0 +1,15 @@
+.contenedor{
+    display: block;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cont-home{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.button{
+    justify-content: center;
+}

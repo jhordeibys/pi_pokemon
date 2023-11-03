@@ -1,0 +1,30 @@
+.NavBar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(24, 23, 23);
+    width:100%;
+    border: solid 2px whitesmoke;
+    box-shadow: 0px 0px 5px wheat
+;
+}
+
+.NavBar-img-logo{
+ display: flex;
+ justify-content: space-around;
+ align-items: center;
+ width:30%;
+}
+.NavBar-img-logo img{
+    width: 4rem;
+    padding: 4px;
+    margin: 0 0 0 0;
+    border-radius: 50px;
+    display: block;
+}
+
+.buttons{
+    width: 15%;
+    display: flex;
+    justify-content: space-around;
+}

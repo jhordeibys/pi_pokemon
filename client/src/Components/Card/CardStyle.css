@@ -1,0 +1,14 @@
+.card-contenedor{
+    background-color: rgb(24, 24, 26);
+    border: solid 2px whitesmoke;
+    border-radius: 20px;
+    width: 15rem;
+    margin: 10px;
+    padding: 5px;
+    text-align: center;
+    flex: 20%;
+}
+
+.image{
+    width: 100%;
+}

@@ -21,11 +21,11 @@ module.exports = (sequelize) => {
       type:DataTypes.INTEGER,
       allowNull: false,
     },
-    stroke:{
+    attack:{
       type:DataTypes.INTEGER,
       allowNull: false,
     },
-    defending:{
+    defense:{
       type:DataTypes.INTEGER,
       allowNull: false,
     },

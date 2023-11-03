@@ -1,4 +1,4 @@
-const {getPokemons, getTypes, getByName, createPokemon} = require("../controller/pokemonController");
+const {getPokemons, getTypes, getByName, createPokemon, getIdPokemon} = require("../controller/pokemonController");
 
 const getPokemonsHandler = async (req, res) => {
     try {
@@ -31,16 +31,16 @@ const getByNameHandler = async (req, res) => {
 
 const postHandler = async (req, res) => {
     try {
-        const {name, image, life, stroke, defending, speed, height, weight, type} = req.body;
+        const {name, image, life, attack, defense, speed, height, weight, type} = req.body;
 
-        if(!name || !image || !life || !stroke || !defending || !type)
+        if(!name || !image || !life || !attack || !defense || !type)
         return res.status(401).send("imcomplete information");
         const response = await createPokemon(
             name,
             image,
             life,
-            stroke,
-            defending,
+            attack,
+            defense,
             speed,
             height,
             weight,
@@ -52,9 +52,23 @@ const postHandler = async (req, res) => {
     }
 };
 
+
+const getByIdHandler = async (req, res) => {
+    try {
+        const {id} = req.params;
+
+        const response = await getIdPokemon(id);
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(400).json({error: error.message});
+    }
+};
+
+
 module.exports = {
     getPokemonsHandler,
     getTypesHandler,
     getByNameHandler,
-    postHandler
+    postHandler,
+    getByIdHandler
 };
