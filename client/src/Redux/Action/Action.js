@@ -1,4 +1,4 @@
-import { GET_POKEMONS, GET_DETAIL, GET_TYPE, POST_POKEMON, PAGINATE } from './ActionTypes';
+import { GET_POKEMONS, GET_DETAIL, GET_TYPE, POST_POKEMON, PAGINATE, GET_BY_NAME, FILTER, RESET } from './ActionTypes';
 
 export const getPokemons = () => {
   return function (dispatch) {
@@ -52,8 +52,7 @@ export const postPokemon = (newPokemon) => {
       }
     })
     dispatch({
-      type: POST_POKEMON
-
+      type: POST_POKEMON,
     });
   }
 };
@@ -65,4 +64,32 @@ export const page = (order) => {
       payload:order
     })
   }
-}
+};
+
+export const getByName = (name) => {
+  return function (dispatch) {
+    fetch(`http://localhost:3001/pokemons/name?q=${name}`) 
+    .then(response => response.json())
+    .then(data => dispatch({
+      type: GET_BY_NAME,
+      payload: data
+    }))
+  }
+};
+
+export const pokemonsFilter = (filter) => {
+  return function (dispatch) {
+    dispatch({
+      type:FILTER,
+      payload:filter
+    })
+  }
+};
+export const resetPokemons = (order) => {
+  return function (dispatch) {
+    dispatch({
+      type:RESET,
+      payload:order
+    })
+  }
+};

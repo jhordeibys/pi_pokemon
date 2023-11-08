@@ -6,7 +6,7 @@ const getPokemons = async() => {
 
     const pokemosDB = [];
     const getpokemonsDB = await Pokemon.findAll({
-        attributes: ['id', 'name', 'image'],
+        attributes: ['id', 'name', 'image', 'attack'],
         include: {
             model: Type,
             through: {
@@ -21,7 +21,9 @@ const getPokemons = async() => {
             "id": p.id,
             "name": p.name,
             "image": p.image,
-            "type": p.types.map(t => t.name)
+            "type": p.types.map(t => t.name).join(' | '),
+            "isApi": false,
+            "attack": p.attack,
         }))
 
 
@@ -37,7 +39,9 @@ const getPokemons = async() => {
             "id": data.id,
             "name": data.name,
             "image": data.sprites.front_default,
-            "type": data.types.map(t => t.type.name)
+            "type": data.types.map(t => t.type.name).join(' | '),
+            "isApi": true,
+            "attack": data.stats[1].base_stat,
         })
     }
     
@@ -98,7 +102,7 @@ const getByName = async(q) => {
             "id": data.id,
             "name": data.name,
             "image": data.sprites.front_default,
-            "types": data.types[0].type.name
+            "types": data.types.map(t => t.type.name).join(' | ')
         };
         allPokemons.push(found);
 
@@ -156,7 +160,8 @@ const getIdPokemon = async (id) =>{
             "speed": pokePk.speed,
             "height": pokePk.height,
             "weight": pokePk.weight,
-            "Type": pokePk.types.map(t => t.name)
+            "Type": pokePk.types.map(t => t.name).join(' | '),
+            "isApi": false,
         }
 
        
@@ -173,7 +178,8 @@ const getIdPokemon = async (id) =>{
             "speed": data.stats[5].base_stat,
             "height": data.height,
             "weight": data.weight,
-            "Type": data.types.map(t => t.type.name)
+            "Type": data.types.map(t => t.type.name).join(' | '),
+            "isApi":true,
          };
     }
 

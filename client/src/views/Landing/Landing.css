@@ -1,8 +1,6 @@
 .landing{
     width: 100vw;
     height: 100vh;
-    padding: 0;
-    margin: 0;
     background-image: url('https://static.wikia.nocookie.net/0b8e9ace-4ded-4059-843a-9f63c5483de8/scale-to-width/755');
     background-size:cover;
     display: flex;

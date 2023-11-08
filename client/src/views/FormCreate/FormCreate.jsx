@@ -24,7 +24,7 @@ const FormCreate = () => {
     frmSpeed:'',
     frmHeight:'',
     frmWeight:'',
-    frmType:[]
+    frmType:[""]
   });
 
   const [formError, setFormError] = useState({
@@ -36,7 +36,7 @@ const FormCreate = () => {
     frmSpeed:'',
     frmHeight:'',
     frmWeight:'',
-    frmType:'select at least 1'
+    //frmType:'select at least 1',
   });
   
   const validarForm = (formValues, name)=>{
@@ -44,6 +44,10 @@ const FormCreate = () => {
         case 'frmName':
           if(formValues.frmName === ''){
             setFormError({...formError, frmName:'required field'})
+          } else if(formValues.frmName.length > 15){ 
+            setFormError({...formError, frmName:'maximum 15 characters'})
+          } else if(!formValues.frmName.match(/^[a-zA-Z]+$/)){
+            setFormError({...formError, frmName:'only accepts letters'})
           } else {setFormError({...formError, frmName:''})}
           
           break;
@@ -51,6 +55,8 @@ const FormCreate = () => {
           case 'frmImg':
             if(formValues.frmImg === ''){
               setFormError({...formError, frmImg:'required field'})
+            } else if(formValues.frmImg.length > 250){
+              setFormError({...formError, frmImg:'maximum 250 characters'})
             } else {setFormError({...formError, frmImg:''})}
             
             break;
@@ -58,51 +64,69 @@ const FormCreate = () => {
           case 'frmLife':
             if(formValues.frmLife === ''){
               setFormError({...formError, frmLife:'required field'})
-            } else {setFormError({...formError, frmLife:''})}
+            } else if(formValues.frmLife.match(/^[a-zA-Z]+$/)){
+              setFormError({...formError, frmLife:'accepts only numbers'})
+            }else if(formValues.frmLife.length > 10){
+              setFormError({...formError, frmLife:'maximum 10 characters'})
+            }else {setFormError({...formError, frmLife:''})}
             
             break;
 
           case 'frmAttack':
             if(formValues.frmAttack === ''){
               setFormError({...formError, frmAttack:'required field'})
-            } else {setFormError({...formError, frmAttack:''})}
+            } else if(formValues.frmAttack.match(/^[a-zA-Z]+$/)){
+              setFormError({...formError, frmAttack:'accepts only numbers'})
+            }else if(formValues.frmAttack.length > 10){
+              setFormError({...formError, frmAttack:'maximum 10 characters'})
+            }else {setFormError({...formError, frmAttack:''})}
             
             break;
 
           case 'frmDefense':
             if(formValues.frmDefense === ''){
               setFormError({...formError, frmDefense:'required field'})
-            } else {setFormError({...formError, frmDefense:''})}
+            } else if(formValues.frmDefense.match(/^[a-zA-Z]+$/)){
+              setFormError({...formError, frmDefense:'accepts only numbers'})
+            }else if(formValues.frmDefense.length > 10){
+              setFormError({...formError, frmDefense:'maximum 10 characters'})
+            }else{setFormError({...formError, frmDefense:''})}
             
             break;
 
           case 'frmSpeed':
-            if(formValues.frmSpeed === ''){
-              setFormError({...formError, frmSpeed:'required field'})
-            } else {setFormError({...formError, frmSpeed:''})}
+            if(formValues.frmSpeed.match(/^[a-zA-Z]+$/)){
+              setFormError({...formError, frmSpeed:'accepts only numbers'})
+            }else if(formValues.frmSpeed.length > 10){
+              setFormError({...formError, frmSpeed:'maximum 10 characters'})
+            }else{setFormError({...formError, frmSpeed:''})}
             
             break;
 
           case 'frmHeight':
-            if(formValues.frmHeight === ''){
-              setFormError({...formError, frmHeight:'required field'})
-            } else {setFormError({...formError, frmHeight:''})}
+            if(formValues.frmHeight.match(/^[a-zA-Z]+$/)){
+              setFormError({...formError, frmHeight:'accepts only numbers'})
+            }else if(formValues.frmHeight.length > 10){
+              setFormError({...formError, frmHeight:'maximum 10 characters'})
+            }else{setFormError({...formError, frmHeight:''})}
             
             break;
 
           case 'frmWeight':
-            if(formValues.frmWeight === ''){
-              setFormError({...formError, frmWeight:'required field'})
-            } else {setFormError({...formError, frmWeight:''})}
+            if(formValues.frmWeight.match(/^[a-zA-Z]+$/)){
+              setFormError({...formError, frmWeight:'accepts only numbers'})
+            }else if(formValues.frmWeight.length > 10){
+              setFormError({...formError, frmWeight:'maximum 10 characters'})
+            }else{setFormError({...formError, frmWeight:''})}
             
             break;
 
-          case 'frmType':
-            if(formValues.frmType[0]){
+          /*case 'frmType':
+            if(formValues.frmType === ""){
               setFormError({...formError, frmType:'select at least 1'})
             } else {setFormError({...formError, frmType:''})}
             
-            break;
+            break;*/
         }
   }
 
@@ -158,6 +182,7 @@ const FormCreate = () => {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     dispatch(postPokemon(newPokemon))
+    // bederia setiar el estado a todos los campos vacios al enviar
   
   };
 
@@ -295,6 +320,7 @@ const FormCreate = () => {
             name='frmType'
             onChange={handleInputChange}
           >
+              <option key="select" >select</option>
             {
               type?.map(t => <option key={t.id} value={t.name}>{t.name}</option>)
             }
@@ -305,7 +331,6 @@ const FormCreate = () => {
           }
         </label>
         <br/>
-        {formError.frmType}
         <br/>
 
         {/* Enviar post */}

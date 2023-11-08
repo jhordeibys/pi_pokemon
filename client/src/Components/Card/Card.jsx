@@ -23,11 +23,13 @@ const Card = ({id, name, image, life, attack, defense, speed, height, weight, ty
       />
 
       <h2>{life}</h2>
+      <label>Attack:</label>
       <h2>{attack}</h2>
       <h2>{defense}</h2>
       <h2>{speed}</h2>
       <h2>{height}</h2>
       <h2>{weight}</h2>
+      <label> Type: </label>
       <h2>{type}</h2>
 
     </div>

@@ -8,8 +8,8 @@ const Detail = () => {
   const {id} = useParams();
 
   const dispatch = useDispatch();
-  const {detail} = useSelector(state => state);
-
+  const detail = useSelector(state => state.detail);
+  
   useEffect( () => {
       
     dispatch(getDetail(id))
@@ -32,7 +32,10 @@ const Detail = () => {
         <h3>Speed: {detail.speed && detail.speed}</h3>
         <h3>Height: {detail.height && detail.height}</h3>
         <h3>Weight: {detail.weight && detail.weight}</h3>
-        <h3>Type: {}</h3>
+        <div>
+        <h3>Type: {detail.Type && detail.Type}</h3>
+        </div>
+        
      
       </div>
       
