@@ -1,15 +1,14 @@
 import {GET_POKEMONS, GET_DETAIL, GET_TYPE, POST_POKEMON, PAGINATE, GET_BY_NAME, FILTER, RESET} from '../Action/ActionTypes';
 
 let inicialState = {
-  pokemons: [],
+  page: [], // Para guardar los pokemones de la pagina.
   pokemonsBackUp: [],
   detail: {},
   type:[],
-  currentPage:0,
+  currentPage:1,
+  lastPage: null, // Para guardar la ultima pagina del paginador
   byName:[],
-  pokemonsFilters:[],
-  filters: false,
-
+  filteredPokemons:[], // Los pokemones filtrados. Esta es la que se va a usar para renderizar en la vista.
 };
 
 //definir las funciones
@@ -17,13 +16,21 @@ let inicialState = {
 function Reducer(state=inicialState, action){
  
   const ITENS_PER_PAGE = 12;
+  let res = 0;
+  let noDecimals = 0;
     switch(action.type){
         case GET_POKEMONS:
-          return {
-            ...state,
-            pokemons: [...action.payload].splice(0, ITENS_PER_PAGE),
-            pokemonsBackUp: action.payload
-          };
+
+          state.pokemonsBackUp = action.payload; // Guardamos los pokemones de la peticion en backup
+          state.filteredPokemons = action.payload; // Guardammos lo pokemones en la lista filtrada
+          state.page = [...state.filteredPokemons].splice(0, ITENS_PER_PAGE);
+
+          res = state.filteredPokemons.length / ITENS_PER_PAGE;
+          noDecimals = parseInt(res);
+
+          state.lastPage = (res > noDecimals) ? noDecimals + 1 : noDecimals;
+          
+          return { ...state }
 
         case GET_DETAIL:
           return {
@@ -42,35 +49,21 @@ function Reducer(state=inicialState, action){
         case POST_POKEMON:
           return {
             ...state,
-            pokemons: [...state.pokemonsBackUp].splice(0, ITENS_PER_PAGE),
-            currentPage:0,
-            filters: false,
+            page: [...state.pokemonsBackUp].splice(0, ITENS_PER_PAGE),
+            currentPage:1,
           }
 
         case PAGINATE:
-          const next_page = state.currentPage +1; //cambia a la pagina 
-          const prev_page = state.currentPage -1; // devuelve a la pagina anterior
-          // renderisa 12 card por pagina
-          const firstPage = action.payload === "next" ? next_page * ITENS_PER_PAGE : prev_page * ITENS_PER_PAGE;
+          const event = action.payload;
 
-          if(state.filters){
-            if(action.payload === "next" && firstPage >= state.pokemonsFilters.length) return state
-            else if(action.payload === "prev" && prev_page < 0) return state
-              return {
-                ...state,
-                pokemons: [...state.pokemonsFilters].splice(firstPage, ITENS_PER_PAGE),
-                currentPage: action.payload === "next"? next_page : prev_page
-              }
-          };
+          if (event === 'next') state.currentPage++;
+          if (event === 'prev') state.currentPage--;
 
-          if(action.payload === "next" && firstPage >= state.pokemonsBackUp.length) return state
-          else if(action.payload === "prev" && prev_page < 0) return state
+          const start = (state.currentPage - 1) * ITENS_PER_PAGE;
+          const end = start + ITENS_PER_PAGE;
+          state.page = [...state.filteredPokemons].slice(start, end);
 
-          return {
-            ...state,
-            pokemons: [...state.pokemonsBackUp].splice(firstPage, ITENS_PER_PAGE),
-            currentPage: action.payload === "next"? next_page : prev_page
-          };
+          return { ...state }
 
           case GET_BY_NAME:
           return {
@@ -82,76 +75,45 @@ function Reducer(state=inicialState, action){
             return{
               ...state,
               pokemons: [...state.pokemonsBackUp].splice(0, ITENS_PER_PAGE),
-              currentPage:0,
-              filters: false
+              currentPage:1,
             }
 
             case FILTER:
-              // 1. Guardamos el payload.
-              const { tipo, origen, selec, orientacion } = action.payload;
-              
-              if(selec === "Name"){
-                let nameSort = [...state.pokemonsBackUp].sort((a, b)=>{
-                  if(orientacion === "asc"){
-                    if(a.name>b.name) return 1
-                    if(a.name<b.name) return -1
-                    return 0
+              const { cboOrderBy, rdoSort, cboType, rdoSource } = action.payload;
+
+              let list = [...state.pokemonsBackUp];
+
+              // Si viene nombre o ataque en filtro order by.
+              if (cboOrderBy !== 'none') {
+
+                // Ordenamos la lista en asc o desc
+                list = list.sort((a, b) => {
+                  if(rdoSort === "asc") {
+                    if(a[cboOrderBy]>b[cboOrderBy]) return 1
+                    if(a[cboOrderBy]<b[cboOrderBy]) return -1
                   } else {
-                    if(a.name>b.name) return -1
-                    if(a.name<b.name) return 1
-                    return 0
+                    if(a[cboOrderBy]>b[cboOrderBy]) return -1
+                    if(a[cboOrderBy]<b[cboOrderBy]) return 1
                   }
                 })
-                return{
-                  ...state,
-                  pokemons:[...nameSort].splice(0, ITENS_PER_PAGE),
-                  pokemonsBackUp: nameSort,
-                  currentPage:0,
-                }
-              };
-
-              if(selec === "Attack"){
-                let attackSort = [...state.pokemonsBackUp].sort((a, b)=>{
-                  if(orientacion === "asc"){
-                    if(a.attack>b.attack) return 1
-                    if(a.attack<b.attack) return -1
-                    return 0
-                  } else {
-                    if(a.attack>b.attack) return -1
-                    if(a.attack<b.attack) return 1
-                    return 0
-                  }
-                })
-                return{
-                  ...state,
-                  pokemons:[...attackSort].splice(0, ITENS_PER_PAGE),
-                  pokemonsBackUp: attackSort,
-                  currentPage:0,
-                }
-              };
-
-              if(tipo){
-                let tipoFilt = [...state.pokemonsBackUp].filter((p)=>{
-                  if(origen === "DB"){
-                    return p.type.includes(tipo) && p.isApi === false;
-                  } else if(origen === "API"){
-                    return p.type.includes(tipo) && p.isApi === true;
-                  } else {
-                    return p.type.includes(tipo);
-                  }
-                })
-                return{
-                  ...state,
-                  pokemons: [...tipoFilt].splice(0, ITENS_PER_PAGE),
-                  pokemonsFilters: tipoFilt,
-                  currentPage:0,
-                  filters: true,
-
-                }
               }
-              console.log(selec + 'holaaaaa1')
 
-          {/* return default de switch principal */}
+              if (cboType !== 'all') list = list.filter((p) => p.type.includes(cboType));
+
+              if (rdoSource === 'api') list = list.filter((p) => p.isApi);
+              if (rdoSource === 'db') list = list.filter((p) => !p.isApi);
+
+              state.currentPage = 1;
+              state.filteredPokemons = [...list];
+              state.page = state.filteredPokemons.splice(0, ITENS_PER_PAGE);
+
+              res = state.filteredPokemons.length / ITENS_PER_PAGE;
+              noDecimals = parseInt(res);
+
+              state.lastPage = (res > noDecimals) ? noDecimals + 1 : noDecimals;
+              
+              return { ...state }
+
         default:
           return{
             ...state

@@ -1,6 +1,5 @@
 const axios = require('axios');
 const { Pokemon, Type } = require("../db");
-const { Op } = require("sequelize")
 
 const getPokemons = async() => {
 
@@ -84,7 +83,7 @@ const getTypes = async() => {
 const getByName = async(q) => {
     l = q.toLowerCase();
     
-    const allPokemons = await Pokemon.findAll({
+    let allPokemons = await Pokemon.findAll({
         where: {
             name: l
         },

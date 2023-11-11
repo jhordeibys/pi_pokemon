@@ -6,16 +6,18 @@ const SearchBar = () => {
   const dispatch = useDispatch();
   const [name, setName]= useState('');
 
+
   const handleChange = (e)=> {
     setName(e.target.value)
   }
  
   
-  const handleSutmit = (e)=>{
+  const handleSutmit = ()=>{
     dispatch(getByName(name))
     setName('')
 
   }
+
       
 
 
@@ -24,11 +26,11 @@ const SearchBar = () => {
       <input 
       type='search'
       placeholder='Seach by name'
-      onChange={handleChange}
+      onChange={(e)=>handleChange(e)}
       />
       <button 
       type='submit'
-      onClick={handleSutmit}>Search</button>
+      onClick={()=>handleSutmit()}>Search</button>
     </div>
   )
 }

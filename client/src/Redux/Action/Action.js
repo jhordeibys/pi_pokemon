@@ -73,7 +73,8 @@ export const getByName = (name) => {
     .then(data => dispatch({
       type: GET_BY_NAME,
       payload: data
-    }))
+    })
+    )
   }
 };
 
