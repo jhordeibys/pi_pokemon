@@ -1,4 +1,4 @@
-import { GET_POKEMONS, GET_DETAIL, GET_TYPE, POST_POKEMON, PAGINATE, GET_BY_NAME, FILTER, RESET } from './ActionTypes';
+import { GET_POKEMONS, GET_DETAIL, GET_TYPE, POST_POKEMON, PAGINATE, GET_BY_NAME, FILTER, RESET, RESET_PAGE } from './ActionTypes';
 
 export const getPokemons = () => {
   return function (dispatch) {
@@ -67,14 +67,26 @@ export const page = (order) => {
 };
 
 export const getByName = (name) => {
+  console.log(name + 'holaaa')
   return function (dispatch) {
-    fetch(`http://localhost:3001/pokemons/name?q=${name}`) 
-    .then(response => response.json())
-    .then(data => dispatch({
+    fetch(`http://localhost:3001/pokemons/name?q=${name}`,{
+      method: 'GET',
+    }) 
+    .then((response) =>  { 
+      if (!response.ok) {
+      throw new Error(`Error de red - Código de estado: ${response.status}`);
+      }
+      return response.json()
+   })
+    .then((data) => {dispatch({
       type: GET_BY_NAME,
-      payload: data
-    })
+      payload: data,
+      
+    })},
     )
+    .catch(error =>{
+      console.log(error + 'encontrado')
+    })
   }
 };
 
@@ -86,6 +98,7 @@ export const pokemonsFilter = (filter) => {
     })
   }
 };
+
 export const resetPokemons = (order) => {
   return function (dispatch) {
     dispatch({
@@ -94,3 +107,11 @@ export const resetPokemons = (order) => {
     })
   }
 };
+export const setPageFromBackUp = () => {
+  return function (dispatch) {
+    dispatch({
+      type:RESET_PAGE,
+    })
+  }
+};
+

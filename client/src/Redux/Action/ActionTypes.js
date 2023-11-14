@@ -6,3 +6,4 @@ export const PAGINATE = 'PAGINATE';
 export const GET_BY_NAME = 'GET_BY_NAME';
 export const FILTER = 'FILTER';
 export const RESET = 'RESET';
+export const RESET_PAGE = 'RESET_PAGE';

@@ -82,31 +82,48 @@ const getTypes = async() => {
 
 const getByName = async(q) => {
     l = q.toLowerCase();
+    let allPokemons = [];
     
-    let allPokemons = await Pokemon.findAll({
-        where: {
-            name: l
-        },
-        attributes: ['id', 'name', 'image']
+    const pokDB = await Pokemon.findOne({
+        
+        where: { name: l },
+        attributes: ['id', 'name', 'image', 'attack'],
+        include:[{
+            model:Type,
+            through:{
+                attributes:['typeId']
+            }
+            
+        }]
+        
     });
 
-    if (allPokemons.length > 0) {
+    if(pokDB) {
+        allPokemons.push({
+            "id": pokDB.id,
+            "name": pokDB.name,
+            "image": pokDB.image,
+            "attack": pokDB.attack,
+            "type": pokDB.types.map(t => t.dataValues.name).join(' | ')
+        })
         return allPokemons
     }
     
-    try {        
-        const { data } = await axios.get(`https://pokeapi.co/api/v2/pokemon/${l}`);
 
-        const found = {
+    try {
+        const {data} = await axios.get(`https://pokeapi.co/api/v2/pokemon/${l}`);
+
+        allPokemons.push({
             "id": data.id,
             "name": data.name,
             "image": data.sprites.front_default,
-            "types": data.types.map(t => t.type.name).join(' | ')
-        };
-        allPokemons.push(found);
+            "attack": data.stats[1].base_stat,
+            "type": data.types.map(t => t.type.name).join(' | ')
+        });
 
-        return allPokemons
+        return  allPokemons;
     } catch (error) {
+        console.log(error);
         return "NOT FOUND";
     }
 };

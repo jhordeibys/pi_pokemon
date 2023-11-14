@@ -5,18 +5,20 @@ import Create from './views/FormCreate/FormCreate';
 import NavBar from './Components/NavBar/NavBar';
 import LandingPage from './views/landing/landingPage';
 import './App.css';
+import {useState} from 'react';
 
 
 function App() {
 
   const {pathname} = useLocation();
+  const [showPaginator, setShowPaginator] = useState(true)
 
   return(
 
     <div className='app'>
 
       <div>
-        {pathname !== '/' && <NavBar onSearch=''/*{onSearch}*//>}
+        {pathname !== '/' && <NavBar setShowPaginator={setShowPaginator}/>}
 
       </div>
 
@@ -24,7 +26,7 @@ function App() {
         <Routes className='pages'>
         
           <Route path={'/'} element={<LandingPage/>}/>;
-          <Route path={'/Home'} element={<Home/>}/>;
+          <Route path={'/Home'} element={<Home showPaginator={showPaginator}/>}/>;
           <Route path={'/Detail/:id'} element={<Detail/>}/>;
           <Route path={'/Create'} element={<Create/>}/>;
 

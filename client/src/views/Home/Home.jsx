@@ -5,7 +5,7 @@ import Card from '../../Components/Card/Card';
 import './HomeStyle.css'
 
 
-const Home = () => {
+const Home = ({showPaginator}) => {
 
   const dispatch = useDispatch();
   const pokemons = useSelector(state => state.page);
@@ -19,6 +19,8 @@ const Home = () => {
     cboType: 'all',
     rdoSource: 'all'
   });
+
+  
 
   const filterChange = (e) => {
     setFilters({...filters, [e.target.name]: e.target.value});
@@ -166,7 +168,7 @@ const Home = () => {
       <div className="cont-home">
 
         { pokemons.length === 0
-          ? <p>No hay pokemons con ese filtro</p>
+          ? <img className="img" src="https://static.vecteezy.com/system/resources/previews/001/826/301/original/progress-loading-bar-buffering-download-upload-and-loading-icon-vector.jpg" alt="Loading" />
           : pokemons.map((pokemon) => (
             <Card
               key={`key-${pokemon.id}`}
@@ -181,7 +183,9 @@ const Home = () => {
 
       </div>  
 
-      <div className="button">
+      { 
+        showPaginator &&
+        <div className="button">
         { currentPage > 1 &&
           <button name="prev" onClick={pagination}>Prev</button>
         }
@@ -190,6 +194,10 @@ const Home = () => {
           <button name="next" onClick={pagination}>Next</button>
         }
       </div>
+
+      }
+
+      
 
   </div>
   )

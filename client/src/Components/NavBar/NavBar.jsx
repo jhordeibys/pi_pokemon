@@ -3,7 +3,7 @@ import { NavLink} from 'react-router-dom';
 import SearchBar from '../SearchBar/SearchBar';
 import './NavBarStyle.css';
 
-const NavBar = () => {
+const NavBar = ({setShowPaginator}) => {
 
 
 
@@ -18,7 +18,7 @@ const NavBar = () => {
           /> 
         </NavLink>
         <br/>
-        <SearchBar/>
+        <SearchBar setShowPaginator={setShowPaginator}/>
 
       </div>
 
